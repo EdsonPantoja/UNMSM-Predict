@@ -1,29 +1,25 @@
 from flask import Flask, request, render_template
 import pandas as pd
 import joblib
-
-app = Flask(__name__)
+import os
 
 # Cargar modelo
 modelo = joblib.load('mejor_modelo_entrenado.pkl')
 
 # Diccionario de tasas por carrera
-TASA_INGRESO_DICT = {
-    'ARQUITECTURA': 0.1,
-    'INGENIERÍA': 0.2,
-    'MEDICINA': 0.05,
-    'DERECHO': 0.15
-    # Puedes agregar más carreras y sus tasas aquí
-}
+from tasas_ingreso import TASA_INGRESO_DICT
+
+app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('formulario.html')
+    carreras = sorted(TASA_INGRESO_DICT.keys())  # Lista ordenada
+    return render_template('formulario.html', carreras=carreras)
 
 @app.route('/predecir', methods=['POST'])
 def predecir():
     carrera = request.form['CARRERA'].upper()
-    tasa = TASA_INGRESO_DICT.get(carrera, 0.0)  # valor por defecto 0.0 si no está en el dict
+    tasa = TASA_INGRESO_DICT.get(carrera, 0.0)
 
     datos = {
         'CARRERA': [carrera],
@@ -40,11 +36,16 @@ def predecir():
     pred = modelo.predict(df)[0]
     proba = modelo.predict_proba(df)[0].max()
 
+    resultado = "INGRESAS" if pred == 1 else "NO INGRESAS"
+
     return f'''
-        <h2>Resultado: {pred}</h2>
+        <h2>Resultado: {resultado}</h2>
         <p>Confianza: {round(proba * 100, 2)}%</p>
-        <p><b>Tasa de ingreso aplicada:</b> {tasa}</p>
+        <form action="/" method="get">
+            <button type="submit">Volver a predecir</button>
+        </form>
     '''
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
