@@ -1,19 +1,104 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Formulario de Predicción</title>
+    <meta charset="UTF-8">
+    <title>Predicción de Ingreso UNMSM</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #fff;
+        }
+
+        input[type="submit"] {
+            margin-top: 25px;
+            width: 100%;
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Formulario de Predicción</h1>
-    <form action="/predecir" method="post">
-        Carrera: <input type="text" name="CARRERA"><br>
-        Sexo: <input type="text" name="SEXO"><br>
-        Colegio de Procedencia: <input type="text" name="COLEGIO_PROCENDENCIA"><br>
-        Año y Periodo: <input type="text" name="AÑO_PERIODO" value="2025-II"><br>
-        Puntaje: <input type="number" name="PUNTAJE"><br>
-        Edad: <input type="number" name="EDAD"><br>
-        Número de Postulación: <input type="number" name="NRO_POSTULACION"><br>
-        <input type="submit" value="Predecir">
-    </form>
+    <div class="form-container">
+        <h1>Predicción de Ingreso</h1>
+        <form action="/predecir" method="post">
+
+            <label for="CARRERA">Carrera:</label>
+            <select name="CARRERA" id="CARRERA">
+                {% for carrera in carreras %}
+                    <option value="{{ carrera }}">{{ carrera }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="SEXO">Sexo:</label>
+            <select name="SEXO" id="SEXO">
+                <option value="MASCULINO">M</option>
+                <option value="FEMENINO">F</option>
+            </select>
+
+            <label for="COLEGIO_PROCENDENCIA">Colegio de Procedencia:</label>
+            <select name="COLEGIO_PROCENDENCIA" id="COLEGIO_PROCENDENCIA">
+                <option value="ESTATAL">Estatal</option>
+                <option value="PARTICULAR">Particular</option>
+            </select>
+
+            <input type="hidden" name="AÑO_PERIODO" value="2025-II">
+
+            <label for="PUNTAJE">Puntaje:</label>
+            <input type="number" name="PUNTAJE" required>
+
+            <label for="EDAD">Edad:</label>
+            <input type="number" name="EDAD" required>
+
+            <label for="NRO_POSTULACION">Número de Postulación:</label>
+            <input type="number" name="NRO_POSTULACION" required>
+
+            <input type="submit" value="Predecir">
+        </form>
+    </div>
 </body>
 </html>
