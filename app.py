@@ -3,17 +3,15 @@ import pandas as pd
 import joblib
 import os
 
-# Cargar modelo
-modelo = joblib.load('mejor_modelo_entrenado.pkl')
-
-# Diccionario de tasas por carrera
 from tasas_ingreso import TASA_INGRESO_DICT
 
 app = Flask(__name__)
 
+modelo = joblib.load('mejor_modelo_entrenado.pkl')
+
 @app.route('/')
 def index():
-    carreras = sorted(TASA_INGRESO_DICT.keys())  # Lista ordenada
+    carreras = sorted(TASA_INGRESO_DICT.keys())
     return render_template('formulario.html', carreras=carreras)
 
 @app.route('/predecir', methods=['POST'])
@@ -37,14 +35,9 @@ def predecir():
     proba = modelo.predict_proba(df)[0].max()
 
     resultado = "INGRESAS" if pred == 1 else "NO INGRESAS"
+    confianza = round(proba * 100, 2)
 
-    return f'''
-        <h2>Resultado: {resultado}</h2>
-        <p>Confianza: {round(proba * 100, 2)}%</p>
-        <form action="/" method="get">
-            <button type="submit">Volver a predecir</button>
-        </form>
-    '''
+    return render_template("resultado.html", resultado=resultado, confianza=confianza)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
