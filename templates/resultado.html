@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-image: url('https://imgmedia.larepublica.pe/640x371/larepublica/original/2022/10/14/63498dadc8837d13c17ad4b1.webp');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+        }
+
+        h2 {
+            font-size: 28px;
+            color: #333;
+        }
+
+        .icon {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        .confidence {
+            font-size: 18px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 25px;
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="result-container">
+        {% if resultado == "INGRESAS" %}
+            <img class="icon" src="https://cdn-icons-png.flaticon.com/512/845/845646.png" alt="Ingresas">
+        {% else %}
+            <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1828/1828843.png" alt="No Ingresas">
+        {% endif %}
+
+        <h2>Resultado: {{ resultado }}</h2>
+        <p class="confidence">Confianza: {{ confianza }}%</p>
+
+        <form action="/" method="get">
+            <button type="submit">Volver a predecir</button>
+        </form>
+    </div>
+</body>
+</html>
